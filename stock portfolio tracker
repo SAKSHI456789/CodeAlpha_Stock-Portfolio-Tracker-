@@ -1,0 +1,46 @@
+
+stock_prices = {
+    'AAPL': 190.00,
+    'MSFT': 410.00,
+    'GOOG': 2800.00,
+    'TSLA': 750.00,
+    'AMZN': 130.00
+}
+portfolio = {}
+print("📈 Enter stock symbol and quantity (type 'done' to finish):")
+while True:
+    symbol = input("Stock Symbol: ").upper()
+    if symbol == 'DONE':
+        break
+    if symbol not in stock_prices:
+        print("❌ Stock not found in price list. Try again.")
+        continue
+    try:
+        quantity = int(input(f"Quantity of {symbol}: "))
+        if quantity < 0:
+            print("❌ Quantity cannot be negative.")
+            continue
+        portfolio[symbol] = quantity
+    except ValueError:
+        print("❌ Please enter a valid number.")
+
+# Display portfolio and calculate total
+total_value = 0
+output_lines = []
+print("\n📊 Your Portfolio Summary:")
+print("{:<10} {:<10} {:<15} {:<15}".format("Symbol", "Qty", "Price", "Value"))
+for symbol, qty in portfolio.items():
+    price = stock_prices[symbol]
+    value = qty * price
+    total_value += value
+    print("{:<10} {:<10} ${:<14.2f} ${:<14.2f}".format(symbol, qty, price, value))
+    output_lines.append(f"{symbol},{qty},{price},{value}\n")
+
+print(f"\n💰 Total Investment Value: ${total_value:.2f}")
+save = input("\n💾 Save to CSV file? (y/n): ").lower()
+if save == 'y':
+    with open("portfolio.csv", "w") as f:
+        f.write("Symbol,Quantity,Price,Value\n")
+        f.writelines(output_lines)
+        f.write(f"\nTotal,,,{total_value}\n")
+    print("✅ Portfolio saved to 'portfolio.csv'")
